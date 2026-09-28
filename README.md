@@ -240,6 +240,15 @@ LedgerLens was developed using:
 
 ---
 
+## 👤 Author
+
+**Thubelihle Ndaba**
+
+B.S. Mathematics & B.S. Finance  
+The College of St. Scholastica
+
+Interests: Actuarial Science • Financial Analytics • Risk • Automation • AI
+
 ## 📁 Repository Structure
 
 ```text
