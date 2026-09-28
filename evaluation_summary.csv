@@ -1,0 +1,9 @@
+Metric,Result
+Known Ground-Truth Anomalies,21
+LedgerLens Flagged Transactions,21
+Known Anomalies Detected,21
+Known Anomalies Missed,0
+Additional Transactions Flagged,0
+Ground-Truth Detection Rate,100.0%
+Flag Precision vs Ground Truth,100.0%
+Raw Control Findings,24

@@ -1,0 +1,4 @@
+Transaction_ID,Date,Vendor_or_Client,Amount,Bank_Reference,Bank_Date,Bank_Description,Bank_Amount,Reconciliation_Status,Review_Reason
+TXN00596,2026-06-29,Office Depot,-378.98,,,,,Unmatched - Review,Transaction appears in the accounting ledger but is not present in the simulated bank record. This may represent a timing difference or require investigation.
+TXN00646,2026-06-29,Google Workspace,-156.48,,,,,Unmatched - Review,Transaction appears in the accounting ledger but is not present in the simulated bank record. This may represent a timing difference or require investigation.
+TXN00645,2026-06-29,Target,-76.2,,,,,Unmatched - Review,Transaction appears in the accounting ledger but is not present in the simulated bank record. This may represent a timing difference or require investigation.

@@ -1,0 +1,22 @@
+Anomaly_ID,Transaction_ID,Anomaly_Type,Explanation
+ANOM001,DUP001,Duplicate Transaction,Possible duplicate of TXN00175 for Target in the amount of $217.76.
+ANOM002,DUP002,Duplicate Transaction,Possible duplicate of TXN00364 for AWS in the amount of $322.67.
+ANOM003,DUP003,Duplicate Transaction,Possible duplicate of TXN00604 for Summit Accounting in the amount of $877.72.
+ANOM004,DUP004,Duplicate Transaction,Possible duplicate of TXN00602 for Target in the amount of $164.07.
+ANOM005,DUP005,Duplicate Transaction,Possible duplicate of TXN00425 for Google Ads in the amount of $298.97.
+ANOM006,OUT001,Unusually Large Expense,"AWS transaction of $4,850.00 is intentionally much larger than the vendor's normal transaction range."
+ANOM007,OUT002,Unusually Large Expense,"Google Ads transaction of $6,200.00 is intentionally much larger than the vendor's normal transaction range."
+ANOM008,OUT003,Unusually Large Expense,"Office Depot transaction of $2,750.00 is intentionally much larger than the vendor's normal transaction range."
+ANOM009,OUT004,Unusually Large Expense,"Uber transaction of $1,850.00 is intentionally much larger than the vendor's normal transaction range."
+ANOM010,OUT005,Unusually Large Expense,"Adobe transaction of $3,100.00 is intentionally much larger than the vendor's normal transaction range."
+ANOM011,TXN00070,Incorrect Category,Delta Airlines was intentionally changed from 'Travel' to 'Office Supplies'.
+ANOM012,TXN00057,Incorrect Category,Microsoft was intentionally changed from 'Software' to 'Travel'.
+ANOM013,TXN00186,Incorrect Category,Office Depot was intentionally changed from 'Office Supplies' to 'Software'.
+ANOM014,TXN00076,Incorrect Category,Google Ads was intentionally changed from 'Marketing' to 'Utilities'.
+ANOM015,TXN00044,Incorrect Category,Xcel Energy was intentionally changed from 'Utilities' to 'Marketing'.
+ANOM016,NEW001,New Vendor,"Quantum Strategy Partners is a previously unseen vendor with a $7,200.00 transaction."
+ANOM017,NEW002,New Vendor,"Rapid Growth Consulting is a previously unseen vendor with a $5,600.00 transaction."
+ANOM018,NEW003,New Vendor,"Executive Solutions Group is a previously unseen vendor with a $6,800.00 transaction."
+ANOM019,RND001,Large Round-Dollar Transaction,"Amazon Business transaction of $5,000.00 was intentionally inserted as an unusual round-dollar expense."
+ANOM020,RND002,Large Round-Dollar Transaction,"Northstar Legal transaction of $4,000.00 was intentionally inserted as an unusual round-dollar expense."
+ANOM021,RND003,Large Round-Dollar Transaction,"Summit Accounting transaction of $3,000.00 was intentionally inserted as an unusual round-dollar expense."

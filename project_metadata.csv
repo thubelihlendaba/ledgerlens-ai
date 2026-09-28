@@ -1,0 +1,18 @@
+Metric,Value
+Company,Lakeview Consulting LLC
+Reporting Period,January - June 2026
+Transactions Reviewed,687
+Total Revenue,741774.9
+Total Expenses,320880.41
+Net Income,420894.49
+Transactions Flagged,21
+High Priority,3
+Medium Priority,13
+Low Priority,5
+Matched Transactions,684
+Unmatched Transactions,3
+Reconciliation Rate,99.56
+Known Test Anomalies,21
+Detected Test Anomalies,21
+Missed Test Anomalies,0
+Demonstration Detection Rate,100.0
