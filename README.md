@@ -129,6 +129,42 @@ Explains the architecture and separation between deterministic analytics and gen
 
 ---
 
+## 🖥️ Application Preview
+
+LedgerLens is deployed as an interactive Streamlit application that allows users to move from high-level financial performance to transaction-level control analysis, reconciliation, model validation, and AI-assisted management interpretation.
+
+### Executive Dashboard
+
+The executive dashboard provides a consolidated view of financial performance, transaction-review activity, reconciliation results, and the distribution of transactions requiring management attention.
+
+![LedgerLens Executive Dashboard](assets/executive-dashboard.png)
+
+### Financial Performance
+
+The financial-performance view analyzes revenue, expenses, net income, margins, and monthly financial trends across the reporting period.
+
+![LedgerLens Financial Performance](assets/financial-performance.png)
+
+### Risk Review
+
+The risk-review interface presents transactions identified by LedgerLens' deterministic financial controls and prioritizes them according to the strength and combination of their control indicators.
+
+![LedgerLens Risk Review](assets/risk-review.png)
+
+### Model Evaluation
+
+The model-evaluation view compares LedgerLens' identified exceptions against intentionally embedded ground-truth anomalies in the synthetic demonstration dataset. This provides an independent benchmark for evaluating the deterministic detection process.
+
+![LedgerLens Model Evaluation](assets/model-evaluation.png)
+
+### AI-Assisted Management Review
+
+LedgerLens can pass verified analytical results to Google Gemini to generate management-oriented financial and internal-control commentary. The generative AI layer interprets existing analytical findings rather than independently determining transaction classifications.
+
+*Application screenshot to be added.*
+
+---
+
 ## 🧮 Risk Prioritization
 
 LedgerLens combines individual control signals into transaction-level risk scores.
