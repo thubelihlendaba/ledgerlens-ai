@@ -3,7 +3,6 @@ import pandas as pd
 import plotly.express as px
 from pathlib import Path
 from datetime import datetime
-import html
 
 # ============================================================
 # LEDGERLENS AI
@@ -23,80 +22,68 @@ st.set_page_config(
 
 st.markdown(
     """
-    <style>
-        .block-container {
-            padding-top: 1.5rem;
-            padding-bottom: 3rem;
-        }
+<style>
+.block-container {
+    padding-top: 1.5rem;
+    padding-bottom: 3rem;
+}
 
-        [data-testid="stSidebar"] {
-            background-color: #0b2942;
-        }
+[data-testid="stSidebar"] {
+    background-color: #0b2942;
+}
 
-        [data-testid="stSidebar"] * {
-            color: white;
-        }
+[data-testid="stSidebar"] * {
+    color: white;
+}
 
-        .main-header {
-            background: linear-gradient(135deg, #123b5d, #245f86);
-            padding: 32px 36px;
-            border-radius: 16px;
-            margin-bottom: 22px;
-            color: white;
-        }
+.main-header {
+    background: linear-gradient(135deg, #123b5d, #245f86);
+    padding: 32px 36px;
+    border-radius: 16px;
+    margin-bottom: 22px;
+    color: white;
+}
 
-        .main-header h1 {
-            margin: 0;
-            font-size: 42px;
-            font-weight: 750;
-        }
+.main-header h1 {
+    margin: 0;
+    font-size: 42px;
+    font-weight: 750;
+    color: white;
+}
 
-        .main-header p {
-            margin-top: 8px;
-            margin-bottom: 0;
-            font-size: 16px;
-            opacity: 0.92;
-        }
+.main-header p {
+    margin-top: 8px;
+    margin-bottom: 0;
+    font-size: 16px;
+    opacity: 0.92;
+    color: white;
+}
 
-        .section-title {
-            font-size: 23px;
-            font-weight: 700;
-            color: #123b5d;
-            margin-top: 10px;
-            margin-bottom: 10px;
-        }
+.section-title {
+    font-size: 23px;
+    font-weight: 700;
+    color: #123b5d;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
 
-        .info-box {
-            padding: 18px;
-            border-radius: 12px;
-            background-color: #eef5fa;
-            border-left: 5px solid #2b6f9f;
-            margin-bottom: 18px;
-        }
+.info-box {
+    padding: 18px;
+    border-radius: 12px;
+    background-color: #eef5fa;
+    border-left: 5px solid #2b6f9f;
+    margin-bottom: 18px;
+    color: #172b4d;
+}
 
-        .risk-high {
-            color: #b42318;
-            font-weight: 700;
-        }
-
-        .risk-medium {
-            color: #b54708;
-            font-weight: 700;
-        }
-
-        .risk-low {
-            color: #175cd3;
-            font-weight: 700;
-        }
-
-        .footer {
-            text-align: center;
-            color: #667085;
-            font-size: 12px;
-            padding-top: 35px;
-        }
-    </style>
-    """,
+.footer {
+    text-align: center;
+    color: #667085;
+    font-size: 12px;
+    padding-top: 35px;
+}
+</style>
+""",
     unsafe_allow_html=True,
 )
 
@@ -153,7 +140,7 @@ def numeric_series(df, column):
 
 
 # ============================================================
-# LOAD LEDGERLENS DATA
+# LOAD DATA
 # ============================================================
 
 transactions = load_csv("transactions.csv")
@@ -169,7 +156,7 @@ project_metadata = load_csv("project_metadata.csv")
 
 
 # ============================================================
-# CALCULATE FINANCIAL METRICS
+# FINANCIAL METRICS
 # ============================================================
 
 revenue = 0.0
@@ -203,7 +190,7 @@ else:
     net_income = revenue - expenses
 
 
-# Fallback calculation using transaction-level data
+# Fallback to cleaned transaction-level data
 if revenue == 0 and not clean_transactions.empty:
 
     amount_col = find_column(
@@ -243,10 +230,14 @@ if revenue == 0 and not clean_transactions.empty:
 # CONTROL / RISK METRICS
 # ============================================================
 
-transactions_reviewed = len(clean_transactions)
+# IMPORTANT:
+# Use the complete source ledger as the population reviewed.
+transactions_reviewed = len(transactions)
 
+# Fallback if transactions.csv is unavailable.
 if transactions_reviewed == 0:
-    transactions_reviewed = len(transactions)
+    transactions_reviewed = len(clean_transactions)
+
 
 unique_flagged = len(transaction_risk)
 
@@ -269,11 +260,14 @@ if priority_col:
     low_count = int((priority_values == "low").sum())
 
 else:
-
     high_count = 0
     medium_count = 0
     low_count = 0
 
+
+# ============================================================
+# RECONCILIATION
+# ============================================================
 
 matched_transactions = max(
     transactions_reviewed - len(unmatched_items),
@@ -281,13 +275,10 @@ matched_transactions = max(
 )
 
 if transactions_reviewed > 0:
-
     reconciliation_rate = (
         matched_transactions / transactions_reviewed
     ) * 100
-
 else:
-
     reconciliation_rate = 0
 
 
@@ -296,7 +287,6 @@ else:
 # ============================================================
 
 known_anomalies = len(ground_truth)
-
 detected_anomalies = 0
 
 detected_col = find_column(
@@ -329,19 +319,17 @@ elif result_col:
         .sum()
     )
 
+
 missed_anomalies = max(
     known_anomalies - detected_anomalies,
     0
 )
 
 if known_anomalies > 0:
-
     detection_rate = (
         detected_anomalies / known_anomalies
     ) * 100
-
 else:
-
     detection_rate = 0
 
 
@@ -384,21 +372,20 @@ with st.sidebar:
 # HEADER
 # ============================================================
 
+# Keep the HTML flush-left inside the string.
+# This prevents Streamlit Markdown from displaying it as code.
+
 st.markdown(
-    """
-    <div class="main-header">
-        <div style="font-size:13px;letter-spacing:3px;font-weight:700;">
-            AI-ASSISTED FINANCIAL REVIEW
-        </div>
-
-        <h1>LedgerLens AI</h1>
-
-        <p>
-            Financial controls • anomaly detection • reconciliation •
-            risk prioritization • AI-assisted management interpretation
-        </p>
-    </div>
-    """,
+"""<div class="main-header">
+<div style="font-size:13px;letter-spacing:3px;font-weight:700;">
+AI-ASSISTED FINANCIAL REVIEW
+</div>
+<h1>LedgerLens AI</h1>
+<p>
+Financial controls • anomaly detection • reconciliation •
+risk prioritization • AI-assisted management interpretation
+</p>
+</div>""",
     unsafe_allow_html=True,
 )
 
@@ -416,21 +403,9 @@ if page == "Executive Dashboard":
 
     c1, c2, c3, c4 = st.columns(4)
 
-    c1.metric(
-        "Revenue",
-        money(revenue)
-    )
-
-    c2.metric(
-        "Expenses",
-        money(expenses)
-    )
-
-    c3.metric(
-        "Net Income",
-        money(net_income)
-    )
-
+    c1.metric("Revenue", money(revenue))
+    c2.metric("Expenses", money(expenses))
+    c3.metric("Net Income", money(net_income))
     c4.metric(
         "Reconciliation",
         f"{reconciliation_rate:.2f}%"
@@ -601,10 +576,10 @@ elif page == "Risk Review":
 
     st.markdown(
         """
-        LedgerLens aggregates individual control signals into
-        transaction-level risk scores so management can focus on
-        transactions requiring the most attention.
-        """
+LedgerLens aggregates individual control signals into
+transaction-level risk scores so management can focus on
+transactions requiring the most attention.
+"""
     )
 
     c1, c2, c3, c4 = st.columns(4)
@@ -777,7 +752,9 @@ elif page == "Reconciliation":
 elif page == "Model Evaluation":
 
     st.markdown(
-        '<div class="section-title">Independent Ground-Truth Validation</div>',
+        '<div class="section-title">'
+        'Independent Ground-Truth Validation'
+        '</div>',
         unsafe_allow_html=True,
     )
 
@@ -805,22 +782,24 @@ elif page == "Model Evaluation":
 
     st.markdown(
         """
-        <div class="info-box">
-        <b>Validation methodology:</b>
-        The ground-truth dataset contains intentionally embedded
-        anomalies used to evaluate LedgerLens after deterministic
-        financial-control and risk-scoring processes have been
-        applied. This is a synthetic benchmark and should not be
-        interpreted as universal real-world anomaly-detection
-        accuracy.
-        </div>
-        """,
+<div class="info-box">
+<b>Validation methodology:</b><br><br>
+The ground-truth dataset contains intentionally embedded
+anomalies used to evaluate LedgerLens after deterministic
+financial-control and risk-scoring processes have been
+applied. This is a synthetic benchmark and should not be
+interpreted as universal real-world anomaly-detection
+accuracy.
+</div>
+""",
         unsafe_allow_html=True,
     )
 
     if not evaluation_results.empty:
 
-        st.markdown("### Transaction-Level Evaluation")
+        st.markdown(
+            "### Transaction-Level Evaluation"
+        )
 
         st.dataframe(
             evaluation_results,
@@ -830,7 +809,9 @@ elif page == "Model Evaluation":
 
     if not evaluation_summary.empty:
 
-        st.markdown("### Evaluation Summary")
+        st.markdown(
+            "### Evaluation Summary"
+        )
 
         st.dataframe(
             evaluation_summary,
@@ -846,21 +827,24 @@ elif page == "Model Evaluation":
 elif page == "AI Management Review":
 
     st.markdown(
-        '<div class="section-title">Gemini-Assisted Management Review</div>',
+        '<div class="section-title">'
+        'Gemini-Assisted Management Review'
+        '</div>',
         unsafe_allow_html=True,
     )
 
     st.markdown(
         """
-        LedgerLens performs deterministic financial controls,
-        reconciliation, anomaly identification, and risk
-        prioritization first.
+LedgerLens performs deterministic financial controls,
+reconciliation, anomaly identification, and risk
+prioritization first.
 
-        Gemini is then used as an **interpretation layer** to convert
-        verified analytical results into a management-oriented review.
-        The generative AI layer does not independently label a
-        transaction as fraud or accounting error.
-        """
+Gemini is then used as an **interpretation layer** to convert
+verified analytical results into a management-oriented review.
+
+The generative AI layer does not independently label a
+transaction as fraud or accounting error.
+"""
     )
 
     st.markdown("### Verified Analytical Context")
@@ -913,8 +897,8 @@ elif page == "AI Management Review":
             if not api_key:
 
                 st.error(
-                    "Gemini API key has not yet been configured "
-                    "in Streamlit Secrets."
+                    "Gemini API key has not yet been "
+                    "configured in Streamlit Secrets."
                 )
 
             else:
@@ -947,42 +931,44 @@ elif page == "AI Management Review":
 You are assisting with a management-level financial review.
 
 The analytical calculations below were already produced by
-LedgerLens using deterministic financial controls. Do not invent
-transactions, amounts, control failures, or allegations.
+LedgerLens using deterministic financial controls.
 
-Company:
+Do not invent transactions, amounts, control failures,
+accounting errors, misconduct, or allegations.
+
+COMPANY
 Lakeview Consulting LLC
 
-Reporting period:
+REPORTING PERIOD
 January through June 2026
 
-Verified financial metrics:
+VERIFIED FINANCIAL METRICS
 Revenue: {money(revenue)}
 Expenses: {money(expenses)}
 Net income: {money(net_income)}
 
-Control review:
+CONTROL REVIEW
 Transactions reviewed: {transactions_reviewed}
 Unique flagged transactions: {unique_flagged}
 High priority: {high_count}
 Medium priority: {medium_count}
 Low priority: {low_count}
 
-Bank reconciliation:
+BANK RECONCILIATION
 Matched transactions: {matched_transactions}
 Unmatched transactions: {len(unmatched_items)}
 Reconciliation rate: {reconciliation_rate:.2f}%
 
-Synthetic ground-truth evaluation:
+SYNTHETIC GROUND-TRUTH EVALUATION
 Known anomalies: {known_anomalies}
 Detected anomalies: {detected_anomalies}
 Missed anomalies: {missed_anomalies}
 Detection rate: {detection_rate:.1f}%
 
-Transaction risk data:
+TRANSACTION RISK DATA
 {risk_context}
 
-Unmatched items:
+UNMATCHED ITEMS
 {unmatched_context}
 
 Prepare a professional management review with these sections:
@@ -996,12 +982,15 @@ Prepare a professional management review with these sections:
 
 Use professional financial-review language.
 
-Clearly distinguish an anomaly or review flag from confirmed fraud,
-misconduct, or accounting error.
+Clearly distinguish an anomaly or review flag from confirmed
+fraud, misconduct, or accounting error.
 
-Do not claim that generative AI performed the underlying financial
-controls. LedgerLens performed the analytical controls and Gemini is
-providing management-oriented interpretation of those results.
+Do not claim that generative AI performed the underlying
+financial controls.
+
+LedgerLens performed the analytical controls and Gemini is
+providing management-oriented interpretation of those
+verified results.
 """
 
                 with st.spinner(
@@ -1055,11 +1044,11 @@ elif page == "Management Report":
 
     st.markdown(
         """
-        This section consolidates LedgerLens financial results,
-        control findings, reconciliation results, independent
-        validation, and AI-assisted interpretation into a
-        management-ready summary.
-        """
+This section consolidates LedgerLens financial results,
+control findings, reconciliation results, independent
+validation, and AI-assisted interpretation into a
+management-ready summary.
+"""
     )
 
     report_text = f"""
@@ -1103,27 +1092,34 @@ Detected: {detected_anomalies}
 Missed: {missed_anomalies}
 Detection Rate: {detection_rate:.1f}%
 
-This validation result represents performance against intentionally
-embedded anomalies in the project's synthetic test environment.
-It should not be interpreted as universal real-world detection
-accuracy.
+This validation result represents performance against
+intentionally embedded anomalies in the project's synthetic
+test environment.
+
+It should not be interpreted as universal real-world
+detection accuracy.
 
 ============================================================
 AI-ASSISTED MANAGEMENT INTERPRETATION
 ============================================================
 
-{st.session_state.get("ai_review", "AI management review has not yet been generated.")}
+{st.session_state.get(
+    "ai_review",
+    "AI management review has not yet been generated."
+)}
 
 ============================================================
 CONTROL NOTICE
 ============================================================
 
-LedgerLens combines deterministic financial controls, anomaly
-detection, risk prioritization, reconciliation, independent
-validation, and generative AI to support human financial review.
+LedgerLens combines deterministic financial controls,
+anomaly detection, risk prioritization, reconciliation,
+independent validation, and generative AI to support human
+financial review.
 
 Flagged transactions require human verification and do not
-independently establish fraud, misconduct, or accounting error.
+independently establish fraud, misconduct, or accounting
+error.
 """
 
     st.text_area(
@@ -1149,7 +1145,9 @@ independently establish fraud, misconduct, or accounting error.
 elif page == "System Design":
 
     st.markdown(
-        '<div class="section-title">LedgerLens System Design</div>',
+        '<div class="section-title">'
+        'LedgerLens System Design'
+        '</div>',
         unsafe_allow_html=True,
     )
 
@@ -1178,26 +1176,26 @@ transaction-level risk scores and management priorities.
 
 ### 4. Bank Reconciliation
 
-Ledger records are compared against banking activity to identify
-matched and unmatched transactions.
+Ledger records are compared against banking activity to
+identify matched and unmatched transactions.
 
 ↓
 
 ### 5. Independent Evaluation
 
-Intentionally embedded ground-truth anomalies are used to test
-whether the control framework successfully identifies known test
-cases.
+Intentionally embedded ground-truth anomalies are used to
+test whether the control framework successfully identifies
+known test cases.
 
 ↓
 
 ### 6. Gemini Interpretation Layer
 
-Verified LedgerLens results are supplied to Gemini to produce a
-management-oriented narrative.
+Verified LedgerLens results are supplied to Gemini to
+produce a management-oriented narrative.
 
-Gemini interprets the analytical results. It does **not** replace
-the underlying deterministic control framework.
+Gemini interprets the analytical results. It does **not**
+replace the underlying deterministic control framework.
 
 ↓
 
@@ -1222,12 +1220,12 @@ follow-up.
 
 st.markdown(
     """
-    <div class="footer">
-        LedgerLens AI • AI-Assisted Financial Review System<br>
-        Deterministic controls + risk prioritization +
-        reconciliation + independent validation +
-        generative AI interpretation
-    </div>
-    """,
+<div class="footer">
+LedgerLens AI • AI-Assisted Financial Review System<br>
+Deterministic controls + risk prioritization +
+reconciliation + independent validation +
+generative AI interpretation
+</div>
+""",
     unsafe_allow_html=True,
 )
