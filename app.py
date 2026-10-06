@@ -773,7 +773,10 @@ def render_dataframe(df, height=None):
 def clean_ai_markdown(text):
     """
     Cleans common formatting artifacts returned by generative models
-    without changing the substantive AI review.
+    while preserving normal Markdown headings and bullet points.
+
+    Currency dollar signs are escaped so Streamlit does not interpret
+    text between separate currency amounts as LaTeX/math.
     """
 
     if not text:
@@ -781,27 +784,33 @@ def clean_ai_markdown(text):
 
     cleaned = str(text)
 
-    # Repair cases where model markdown attaches directly to currency.
-    cleaned = re.sub(
-        r"\$([0-9,]+\.\d{2})\s*\*\*",
-        r"$\1",
-        cleaned
-    )
+    # Remove code fences if the model accidentally returns them.
+    cleaned = cleaned.replace("```markdown", "")
+    cleaned = cleaned.replace("```text", "")
+    cleaned = cleaned.replace("```", "")
 
-    cleaned = cleaned.replace("\\$", "$")
+    # Remove inline-code backticks.
+    cleaned = cleaned.replace("`", "")
 
-    # Remove accidental duplicated bold markers around currency.
+    # Remove accidental bold/italic Markdown markers.
+    cleaned = cleaned.replace("**", "")
+    cleaned = cleaned.replace("__", "")
+
+    # IMPORTANT:
+    # Escape dollar signs that begin currency amounts.
+    # This prevents Streamlit Markdown from treating text between
+    # separate dollar amounts as LaTeX/math.
     cleaned = re.sub(
-        r"\*\*\s*(\$[0-9,]+\.\d{2})\s*\*\*",
-        r"**\1**",
-        cleaned
+        r"(?<!\\)\$(?=\s*\d)",
+        r"\\$",
+        cleaned,
     )
 
     # Prevent excessive blank lines.
     cleaned = re.sub(
         r"\n{4,}",
         "\n\n\n",
-        cleaned
+        cleaned,
     )
 
     return cleaned.strip()
