@@ -281,12 +281,19 @@ div[data-baseweb="select"] span {
 [data-testid="stDataFrame"] {
     border: 1px solid #425465 !important;
     border-radius: 10px !important;
-    overflow: hidden !important;
     background: #F7F9FC !important;
 }
 
+/* Keep Streamlit's native dataframe toolbar accessible.
+   This preserves fullscreen/expand and other table controls. */
 [data-testid="stDataFrame"] iframe {
     border-radius: 10px !important;
+}
+
+[data-testid="stDataFrame"] [data-testid="stElementToolbar"] {
+    visibility: visible !important;
+    opacity: 1 !important;
+    z-index: 1000 !important;
 }
 
 
