@@ -1832,18 +1832,29 @@ STRICT RULES:
 11. FORMATTING RULES — FOLLOW EXACTLY:
 
     Use Markdown ONLY for the six required section headings
-    beginning with ##.
+    beginning with ## and for standard bullet points beginning
+    with "- ".
 
     Do NOT use Markdown bold or italics anywhere in the body.
     Do NOT use *, **, _, or __ for emphasis.
 
-    Write all body paragraphs in plain text.
+    Do NOT use backticks anywhere.
+    Do NOT use inline code formatting.
+    Do NOT use fenced code blocks.
+    Do NOT place any words, transaction IDs, vendor names,
+    dates, numbers, percentages, ratios, or currency values
+    inside backticks or code formatting.
+
+    Do NOT use LaTeX, mathematical notation, math blocks,
+    dollar-sign math delimiters, or equation formatting.
+
+    Write all body paragraphs as normal plain text.
 
     When listing individual findings, use normal Markdown
     bullet points beginning with "- " only.
 
-    Currency values must contain no spaces and must use
-    standard U.S. formatting.
+    Currency values must be written as ordinary plain text
+    using standard U.S. formatting with no spaces.
 
     CORRECT:
     $741,774.90
@@ -1859,10 +1870,17 @@ STRICT RULES:
     5,000.00
     $741,774.90**
     **$741,774.90**
+    `$741,774.90`
 
     Dates must use YYYY-MM-DD format.
 
-    Write multiplication comparisons as normal plain text.
+    Write percentages as ordinary plain text.
+
+    CORRECT:
+    99.56%
+    100.0%
+
+    Write multiplication comparisons as ordinary plain text.
 
     CORRECT:
     22.2 times the vendor's historical median of $224.90
@@ -1870,17 +1888,23 @@ STRICT RULES:
     INCORRECT:
     22.2timesthevendor'shistoricalmedianof224.90
     *22.2 times the vendor's historical median of $224.90*
+    `22.2 times the vendor's historical median of $224.90`
 
-    A transaction finding should follow this format:
+    A transaction finding should follow this exact style:
 
     - Amazon Business (RND001, 2026-03-11, $5,000.00):
       This payment is 22.2 times the vendor's historical
       median of $224.90. The transaction requires review
       of supporting documentation.
 
-    Never place Markdown formatting characters next to
-    transaction names, dates, numbers, percentages, or
-    currency values.
+    Never place Markdown formatting characters immediately
+    before or after transaction names, transaction IDs,
+    dates, numbers, percentages, ratios, or currency values.
+
+    Every currency amount, percentage, ratio, transaction ID,
+    date, vendor name, and explanatory sentence must render
+    as ordinary body text, not as code, mathematical notation,
+    bold text, or italic text.
 
 12. Write in a concise, professional financial-review style
     suitable for management.
