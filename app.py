@@ -4,6 +4,7 @@ import plotly.express as px
 from pathlib import Path
 from datetime import datetime
 
+
 # ============================================================
 # LEDGERLENS AI
 # Streamlit Management Review Application
@@ -16,6 +17,7 @@ st.set_page_config(
     initial_sidebar_state="expanded",
 )
 
+
 # ============================================================
 # CUSTOM STYLING
 # ============================================================
@@ -23,32 +25,98 @@ st.set_page_config(
 st.markdown(
     """
 <style>
+
+/* ==========================================================
+   LEDGERLENS DARK INTERFACE
+   ========================================================== */
+
+html,
+body,
+[data-testid="stAppViewContainer"],
+.stApp {
+    background-color: #0e1117 !important;
+    color: #f5f7fa !important;
+}
+
+/* Main page */
+[data-testid="stMain"] {
+    background-color: #0e1117 !important;
+}
+
 .block-container {
     padding-top: 1.5rem;
     padding-bottom: 3rem;
 }
 
+
+/* ==========================================================
+   SIDEBAR
+   ========================================================== */
+
 [data-testid="stSidebar"] {
-    background-color: #0b2942;
+    background-color: #0b2942 !important;
+    border-right: 1px solid rgba(255, 255, 255, 0.08);
 }
 
 [data-testid="stSidebar"] * {
-    color: white;
+    color: white !important;
 }
 
+
+/* ==========================================================
+   GENERAL TEXT
+   ========================================================== */
+
+.stApp p,
+.stApp li,
+.stApp label {
+    color: #f5f7fa;
+}
+
+.stApp h1,
+.stApp h2,
+.stApp h3,
+.stApp h4,
+.stApp h5,
+.stApp h6 {
+    color: #f5f7fa;
+}
+
+
+/* ==========================================================
+   MAIN HEADER
+   ========================================================== */
+
 .main-header {
-    background: linear-gradient(135deg, #123b5d, #245f86);
+    background: linear-gradient(
+        135deg,
+        #123b5d,
+        #245f86
+    );
+
     padding: 32px 36px;
     border-radius: 16px;
     margin-bottom: 22px;
+
     color: white;
+
+    border: 1px solid rgba(
+        255,
+        255,
+        255,
+        0.06
+    );
+
+    box-shadow:
+        0 10px 30px
+        rgba(0, 0, 0, 0.18);
 }
 
 .main-header h1 {
     margin: 0;
     font-size: 42px;
     font-weight: 750;
-    color: white;
+    color: white !important;
 }
 
 .main-header p {
@@ -56,36 +124,145 @@ st.markdown(
     margin-bottom: 0;
     font-size: 16px;
     opacity: 0.92;
-    color: white;
+    color: white !important;
 }
+
+
+/* ==========================================================
+   SECTION TITLES
+   ========================================================== */
 
 .section-title {
     font-size: 23px;
     font-weight: 700;
-    color: #123b5d;
+    color: #5fa8d3;
     margin-top: 10px;
     margin-bottom: 10px;
 }
 
+
+/* ==========================================================
+   METRICS
+   ========================================================== */
+
+[data-testid="stMetric"] {
+    background-color: #111820;
+    border: 1px solid #263442;
+    border-radius: 12px;
+    padding: 14px 16px;
+
+    box-shadow:
+        0 4px 14px
+        rgba(0, 0, 0, 0.12);
+}
+
+[data-testid="stMetricLabel"] {
+    color: #cbd5e1 !important;
+}
+
+[data-testid="stMetricValue"] {
+    color: #ffffff !important;
+}
+
+
+/* ==========================================================
+   DATAFRAMES
+   ========================================================== */
+
+[data-testid="stDataFrame"] {
+    border: 1px solid #263442;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+
+/* ==========================================================
+   INPUTS
+   ========================================================== */
+
+[data-testid="stTextInput"] input {
+    background-color: #111820 !important;
+    color: white !important;
+    border-color: #344454 !important;
+}
+
+[data-baseweb="select"] > div {
+    background-color: #111820 !important;
+    color: white !important;
+}
+
+
+/* ==========================================================
+   INFO BOX
+   ========================================================== */
+
 .info-box {
     padding: 18px;
     border-radius: 12px;
-    background-color: #eef5fa;
-    border-left: 5px solid #2b6f9f;
+
+    background-color: #132330;
+
+    border-left:
+        5px solid #2b6f9f;
+
     margin-bottom: 18px;
-    color: #172b4d;
+
+    color: #e5edf5;
 }
+
+.info-box b {
+    color: white;
+}
+
+
+/* ==========================================================
+   DIVIDERS
+   ========================================================== */
+
+hr {
+    border-color: #263442 !important;
+}
+
+
+/* ==========================================================
+   BUTTONS
+   ========================================================== */
+
+.stButton button {
+    border-radius: 9px;
+    font-weight: 600;
+}
+
+[data-testid="stDownloadButton"] button {
+    border-radius: 9px;
+}
+
+
+/* ==========================================================
+   ALERTS
+   ========================================================== */
+
+[data-testid="stAlert"] p {
+    color: inherit !important;
+}
+
+
+/* ==========================================================
+   FOOTER
+   ========================================================== */
 
 .footer {
     text-align: center;
-    color: #667085;
+    color: #718096;
     font-size: 12px;
     padding-top: 35px;
 }
+
 </style>
 """,
     unsafe_allow_html=True,
 )
+
 
 # ============================================================
 # HELPERS
@@ -96,6 +273,7 @@ BASE_DIR = Path(__file__).resolve().parent
 
 @st.cache_data
 def load_csv(filename):
+
     path = BASE_DIR / filename
 
     if not path.exists():
@@ -103,21 +281,36 @@ def load_csv(filename):
 
     try:
         return pd.read_csv(path)
+
     except Exception:
         return pd.DataFrame()
 
 
-def find_column(df, possible_names):
+def find_column(
+    df,
+    possible_names
+):
+
     if df.empty:
         return None
 
     normalized = {
-        str(col).strip().lower().replace(" ", "_"): col
+        str(col)
+        .strip()
+        .lower()
+        .replace(" ", "_"): col
+
         for col in df.columns
     }
 
     for name in possible_names:
-        key = name.strip().lower().replace(" ", "_")
+
+        key = (
+            name
+            .strip()
+            .lower()
+            .replace(" ", "_")
+        )
 
         if key in normalized:
             return normalized[key]
@@ -126,33 +319,71 @@ def find_column(df, possible_names):
 
 
 def money(value):
+
     try:
         return f"${float(value):,.2f}"
+
     except Exception:
         return "$0.00"
 
 
-def numeric_series(df, column):
+def numeric_series(
+    df,
+    column
+):
+
     if column is None or df.empty:
         return pd.Series(dtype=float)
 
-    return pd.to_numeric(df[column], errors="coerce").fillna(0)
+    return pd.to_numeric(
+        df[column],
+        errors="coerce"
+    ).fillna(0)
 
 
 # ============================================================
 # LOAD DATA
 # ============================================================
 
-transactions = load_csv("transactions.csv")
-clean_transactions = load_csv("clean_transactions.csv")
-monthly_summary = load_csv("monthly_summary.csv")
-review_queue = load_csv("review_queue.csv")
-transaction_risk = load_csv("transaction_risk.csv")
-unmatched_items = load_csv("unmatched_items.csv")
-ground_truth = load_csv("ground_truth.csv")
-evaluation_results = load_csv("evaluation_results.csv")
-evaluation_summary = load_csv("evaluation_summary.csv")
-project_metadata = load_csv("project_metadata.csv")
+transactions = load_csv(
+    "transactions.csv"
+)
+
+clean_transactions = load_csv(
+    "clean_transactions.csv"
+)
+
+monthly_summary = load_csv(
+    "monthly_summary.csv"
+)
+
+review_queue = load_csv(
+    "review_queue.csv"
+)
+
+transaction_risk = load_csv(
+    "transaction_risk.csv"
+)
+
+unmatched_items = load_csv(
+    "unmatched_items.csv"
+)
+
+ground_truth = load_csv(
+    "ground_truth.csv"
+)
+
+evaluation_results = load_csv(
+    "evaluation_results.csv"
+)
+
+evaluation_summary = load_csv(
+    "evaluation_summary.csv"
+)
+
+project_metadata = load_csv(
+    "project_metadata.csv"
+)
 
 
 # ============================================================
@@ -163,35 +394,75 @@ revenue = 0.0
 expenses = 0.0
 net_income = 0.0
 
+
 rev_col = find_column(
     monthly_summary,
-    ["Revenue", "Total_Revenue"]
+    [
+        "Revenue",
+        "Total_Revenue"
+    ]
 )
+
 
 exp_col = find_column(
     monthly_summary,
-    ["Expenses", "Expense", "Total_Expenses"]
+    [
+        "Expenses",
+        "Expense",
+        "Total_Expenses"
+    ]
 )
+
 
 net_col = find_column(
     monthly_summary,
-    ["Net_Income", "Net Income", "Profit"]
+    [
+        "Net_Income",
+        "Net Income",
+        "Profit"
+    ]
 )
 
+
 if rev_col:
-    revenue = numeric_series(monthly_summary, rev_col).sum()
+
+    revenue = numeric_series(
+        monthly_summary,
+        rev_col
+    ).sum()
+
 
 if exp_col:
-    expenses = numeric_series(monthly_summary, exp_col).sum()
+
+    expenses = numeric_series(
+        monthly_summary,
+        exp_col
+    ).sum()
+
 
 if net_col:
-    net_income = numeric_series(monthly_summary, net_col).sum()
+
+    net_income = numeric_series(
+        monthly_summary,
+        net_col
+    ).sum()
+
 else:
-    net_income = revenue - expenses
+
+    net_income = (
+        revenue -
+        expenses
+    )
 
 
-# Fallback to cleaned transaction-level data
-if revenue == 0 and not clean_transactions.empty:
+# ============================================================
+# FALLBACK TO CLEANED TRANSACTION DATA
+# ============================================================
+
+if (
+    revenue == 0
+    and not clean_transactions.empty
+):
 
     amount_col = find_column(
         clean_transactions,
@@ -200,66 +471,128 @@ if revenue == 0 and not clean_transactions.empty:
 
     type_col = find_column(
         clean_transactions,
-        ["Transaction_Type", "Transaction Type", "Type"]
+        [
+            "Transaction_Type",
+            "Transaction Type",
+            "Type"
+        ]
     )
 
     if amount_col and type_col:
 
-        types = clean_transactions[type_col].astype(str).str.lower()
+        types = (
+            clean_transactions[
+                type_col
+            ]
+            .astype(str)
+            .str.lower()
+        )
 
         revenue = pd.to_numeric(
+
             clean_transactions.loc[
-                types.str.contains("revenue|income", regex=True),
+
+                types.str.contains(
+                    "revenue|income",
+                    regex=True
+                ),
+
                 amount_col
             ],
+
             errors="coerce"
+
         ).sum()
 
         expenses = pd.to_numeric(
+
             clean_transactions.loc[
-                types.str.contains("expense", regex=True),
+
+                types.str.contains(
+                    "expense"
+                ),
+
                 amount_col
             ],
+
             errors="coerce"
+
         ).sum()
 
-        net_income = revenue - expenses
+        net_income = (
+            revenue -
+            expenses
+        )
 
 
 # ============================================================
 # CONTROL / RISK METRICS
 # ============================================================
 
-# IMPORTANT:
-# Use the complete source ledger as the population reviewed.
-transactions_reviewed = len(transactions)
+# The complete source ledger is treated
+# as the population reviewed.
 
-# Fallback if transactions.csv is unavailable.
+transactions_reviewed = len(
+    transactions
+)
+
+
 if transactions_reviewed == 0:
-    transactions_reviewed = len(clean_transactions)
+
+    transactions_reviewed = len(
+        clean_transactions
+    )
 
 
-unique_flagged = len(transaction_risk)
+unique_flagged = len(
+    transaction_risk
+)
+
 
 priority_col = find_column(
     transaction_risk,
-    ["Priority", "Risk_Level", "Risk Level"]
+    [
+        "Priority",
+        "Risk_Level",
+        "Risk Level"
+    ]
 )
+
 
 if priority_col:
 
     priority_values = (
-        transaction_risk[priority_col]
+        transaction_risk[
+            priority_col
+        ]
         .astype(str)
         .str.strip()
         .str.lower()
     )
 
-    high_count = int((priority_values == "high").sum())
-    medium_count = int((priority_values == "medium").sum())
-    low_count = int((priority_values == "low").sum())
+    high_count = int(
+        (
+            priority_values
+            == "high"
+        ).sum()
+    )
+
+    medium_count = int(
+        (
+            priority_values
+            == "medium"
+        ).sum()
+    )
+
+    low_count = int(
+        (
+            priority_values
+            == "low"
+        ).sum()
+    )
 
 else:
+
     high_count = 0
     medium_count = 0
     low_count = 0
@@ -270,15 +603,25 @@ else:
 # ============================================================
 
 matched_transactions = max(
-    transactions_reviewed - len(unmatched_items),
+
+    transactions_reviewed
+    - len(unmatched_items),
+
     0
 )
 
+
 if transactions_reviewed > 0:
+
     reconciliation_rate = (
-        matched_transactions / transactions_reviewed
+
+        matched_transactions
+        / transactions_reviewed
+
     ) * 100
+
 else:
+
     reconciliation_rate = 0
 
 
@@ -286,50 +629,91 @@ else:
 # GROUND-TRUTH EVALUATION
 # ============================================================
 
-known_anomalies = len(ground_truth)
+known_anomalies = len(
+    ground_truth
+)
+
 detected_anomalies = 0
+
 
 detected_col = find_column(
     evaluation_results,
     ["Detected"]
 )
 
+
 result_col = find_column(
     evaluation_results,
-    ["Evaluation_Result", "Result"]
+    [
+        "Evaluation_Result",
+        "Result"
+    ]
 )
+
 
 if detected_col:
 
     detected_anomalies = (
-        evaluation_results[detected_col]
+
+        evaluation_results[
+            detected_col
+        ]
+
         .astype(str)
+
         .str.lower()
-        .isin(["true", "1", "yes", "detected"])
+
+        .isin(
+            [
+                "true",
+                "1",
+                "yes",
+                "detected"
+            ]
+        )
+
         .sum()
     )
+
 
 elif result_col:
 
     detected_anomalies = (
-        evaluation_results[result_col]
+
+        evaluation_results[
+            result_col
+        ]
+
         .astype(str)
+
         .str.lower()
+
         .eq("detected")
+
         .sum()
     )
 
 
 missed_anomalies = max(
-    known_anomalies - detected_anomalies,
+
+    known_anomalies
+    - detected_anomalies,
+
     0
 )
 
+
 if known_anomalies > 0:
+
     detection_rate = (
-        detected_anomalies / known_anomalies
+
+        detected_anomalies
+        / known_anomalies
+
     ) * 100
+
 else:
+
     detection_rate = 0
 
 
@@ -339,16 +723,21 @@ else:
 
 with st.sidebar:
 
-    st.markdown("## 🔎 LedgerLens AI")
+    st.markdown(
+        "## 🔎 LedgerLens AI"
+    )
 
     st.caption(
-        "AI-assisted financial control and management review"
+        "AI-assisted financial control "
+        "and management review"
     )
 
     st.markdown("---")
 
     page = st.radio(
+
         "Navigation",
+
         [
             "Executive Dashboard",
             "Financial Performance",
@@ -364,28 +753,42 @@ with st.sidebar:
 
     st.markdown("---")
 
-    st.caption("Lakeview Consulting LLC")
-    st.caption("January – June 2026")
+    st.caption(
+        "Lakeview Consulting LLC"
+    )
+
+    st.caption(
+        "January – June 2026"
+    )
 
 
 # ============================================================
 # HEADER
 # ============================================================
 
-# Keep the HTML flush-left inside the string.
-# This prevents Streamlit Markdown from displaying it as code.
-
 st.markdown(
-"""<div class="main-header">
-<div style="font-size:13px;letter-spacing:3px;font-weight:700;">
+"""
+<div class="main-header">
+
+<div style="
+font-size:13px;
+letter-spacing:3px;
+font-weight:700;
+">
 AI-ASSISTED FINANCIAL REVIEW
 </div>
-<h1>LedgerLens AI</h1>
+
+<h1>
+LedgerLens AI
+</h1>
+
 <p>
 Financial controls • anomaly detection • reconciliation •
 risk prioritization • AI-assisted management interpretation
 </p>
-</div>""",
+
+</div>
+""",
     unsafe_allow_html=True,
 )
 
@@ -397,23 +800,46 @@ risk prioritization • AI-assisted management interpretation
 if page == "Executive Dashboard":
 
     st.markdown(
-        '<div class="section-title">Executive Dashboard</div>',
+
+        '<div class="section-title">'
+        'Executive Dashboard'
+        '</div>',
+
         unsafe_allow_html=True,
     )
 
+
     c1, c2, c3, c4 = st.columns(4)
 
-    c1.metric("Revenue", money(revenue))
-    c2.metric("Expenses", money(expenses))
-    c3.metric("Net Income", money(net_income))
+
+    c1.metric(
+        "Revenue",
+        money(revenue)
+    )
+
+    c2.metric(
+        "Expenses",
+        money(expenses)
+    )
+
+    c3.metric(
+        "Net Income",
+        money(net_income)
+    )
+
     c4.metric(
         "Reconciliation",
         f"{reconciliation_rate:.2f}%"
     )
 
-    st.markdown("### Transaction Review")
+
+    st.markdown(
+        "### Transaction Review"
+    )
+
 
     a, b, c, d = st.columns(4)
+
 
     a.metric(
         "Transactions Reviewed",
@@ -435,9 +861,14 @@ if page == "Executive Dashboard":
         f"{len(unmatched_items):,}"
     )
 
+
     st.markdown("---")
 
-    st.markdown("### Risk Distribution")
+
+    st.markdown(
+        "### Risk Distribution"
+    )
+
 
     risk_df = pd.DataFrame(
         {
@@ -446,6 +877,7 @@ if page == "Executive Dashboard":
                 "Medium",
                 "Low"
             ],
+
             "Transactions": [
                 high_count,
                 medium_count,
@@ -454,26 +886,54 @@ if page == "Executive Dashboard":
         }
     )
 
+
     fig = px.bar(
+
         risk_df,
+
         x="Priority",
+
         y="Transactions",
+
         text="Transactions",
-        title="Transactions Requiring Management Review",
+
+        title=(
+            "Transactions Requiring "
+            "Management Review"
+        ),
     )
 
+
     fig.update_layout(
-        xaxis_title="Risk Priority",
-        yaxis_title="Transactions",
+
+        xaxis_title=(
+            "Risk Priority"
+        ),
+
+        yaxis_title=(
+            "Transactions"
+        ),
+
         showlegend=False,
+
+        paper_bgcolor="#0e1117",
+
+        plot_bgcolor="#0e1117",
+
+        font=dict(
+            color="#f5f7fa"
+        ),
     )
+
 
     st.plotly_chart(
         fig,
         use_container_width=True
     )
 
+
     st.info(
+
         "Flagged transactions represent items requiring human "
         "verification. A LedgerLens alert does not independently "
         "establish fraud, misconduct, or accounting error."
@@ -487,14 +947,20 @@ if page == "Executive Dashboard":
 elif page == "Financial Performance":
 
     st.markdown(
-        '<div class="section-title">Financial Performance</div>',
+
+        '<div class="section-title">'
+        'Financial Performance'
+        '</div>',
+
         unsafe_allow_html=True,
     )
+
 
     if monthly_summary.empty:
 
         st.warning(
-            "Monthly financial summary data is unavailable."
+            "Monthly financial summary "
+            "data is unavailable."
         )
 
     else:
@@ -505,47 +971,106 @@ elif page == "Financial Performance":
             hide_index=True,
         )
 
+
         month_col = find_column(
+
             monthly_summary,
-            ["Month", "Date", "Period"]
+
+            [
+                "Month",
+                "Date",
+                "Period"
+            ]
         )
 
+
         chart_columns = [
+
             col
-            for col in [rev_col, exp_col, net_col]
+
+            for col in [
+                rev_col,
+                exp_col,
+                net_col
+            ]
+
             if col is not None
         ]
 
-        if month_col and chart_columns:
+
+        if (
+            month_col
+            and chart_columns
+        ):
 
             chart_df = monthly_summary[
-                [month_col] + chart_columns
+                [month_col]
+                + chart_columns
             ].copy()
 
+
             chart_df = chart_df.melt(
+
                 id_vars=month_col,
-                value_vars=chart_columns,
-                var_name="Financial Metric",
+
+                value_vars=(
+                    chart_columns
+                ),
+
+                var_name=(
+                    "Financial Metric"
+                ),
+
                 value_name="Amount",
             )
 
+
             fig = px.line(
+
                 chart_df,
+
                 x=month_col,
+
                 y="Amount",
-                color="Financial Metric",
+
+                color=(
+                    "Financial Metric"
+                ),
+
                 markers=True,
-                title="Monthly Financial Performance",
+
+                title=(
+                    "Monthly Financial "
+                    "Performance"
+                ),
             )
+
+
+            fig.update_layout(
+
+                paper_bgcolor="#0e1117",
+
+                plot_bgcolor="#0e1117",
+
+                font=dict(
+                    color="#f5f7fa"
+                ),
+            )
+
 
             st.plotly_chart(
                 fig,
                 use_container_width=True
             )
 
-    st.markdown("### Period Summary")
+
+    st.markdown(
+        "### Period Summary"
+    )
+
 
     c1, c2, c3 = st.columns(3)
+
 
     c1.metric(
         "Total Revenue",
@@ -570,9 +1095,14 @@ elif page == "Financial Performance":
 elif page == "Risk Review":
 
     st.markdown(
-        '<div class="section-title">Risk Review</div>',
+
+        '<div class="section-title">'
+        'Risk Review'
+        '</div>',
+
         unsafe_allow_html=True,
     )
+
 
     st.markdown(
         """
@@ -582,23 +1112,44 @@ transactions requiring the most attention.
 """
     )
 
+
     c1, c2, c3, c4 = st.columns(4)
 
-    c1.metric("High Priority", high_count)
-    c2.metric("Medium Priority", medium_count)
-    c3.metric("Low Priority", low_count)
-    c4.metric("Total Flagged", unique_flagged)
+
+    c1.metric(
+        "High Priority",
+        high_count
+    )
+
+    c2.metric(
+        "Medium Priority",
+        medium_count
+    )
+
+    c3.metric(
+        "Low Priority",
+        low_count
+    )
+
+    c4.metric(
+        "Total Flagged",
+        unique_flagged
+    )
+
 
     if transaction_risk.empty:
 
         st.warning(
-            "Transaction risk data is unavailable."
+            "Transaction risk data "
+            "is unavailable."
         )
 
     else:
 
         selected_priority = st.selectbox(
+
             "Filter by priority",
+
             [
                 "All",
                 "High",
@@ -607,7 +1158,11 @@ transactions requiring the most attention.
             ],
         )
 
-        risk_display = transaction_risk.copy()
+
+        risk_display = (
+            transaction_risk.copy()
+        )
+
 
         if (
             selected_priority != "All"
@@ -615,11 +1170,18 @@ transactions requiring the most attention.
         ):
 
             risk_display = risk_display[
-                risk_display[priority_col]
+
+                risk_display[
+                    priority_col
+                ]
+
                 .astype(str)
+
                 .str.lower()
+
                 == selected_priority.lower()
             ]
+
 
         st.dataframe(
             risk_display,
@@ -635,15 +1197,24 @@ transactions requiring the most attention.
 elif page == "Transaction Explorer":
 
     st.markdown(
-        '<div class="section-title">Transaction Explorer</div>',
+
+        '<div class="section-title">'
+        'Transaction Explorer'
+        '</div>',
+
         unsafe_allow_html=True,
     )
 
+
     source_df = (
+
         clean_transactions.copy()
+
         if not clean_transactions.empty
+
         else transactions.copy()
     )
+
 
     if source_df.empty:
 
@@ -654,31 +1225,51 @@ elif page == "Transaction Explorer":
     else:
 
         search = st.text_input(
+
             "Search transactions",
+
             placeholder=(
-                "Search transaction ID, vendor, category, "
-                "description, amount..."
+                "Search transaction ID, vendor, "
+                "category, description, amount..."
             ),
         )
 
+
         filtered = source_df.copy()
+
 
         if search:
 
-            mask = filtered.astype(str).apply(
-                lambda column:
-                column.str.contains(
-                    search,
-                    case=False,
-                    na=False
-                )
-            ).any(axis=1)
+            mask = (
 
-            filtered = filtered[mask]
+                filtered
+                .astype(str)
+
+                .apply(
+
+                    lambda column:
+
+                    column.str.contains(
+                        search,
+                        case=False,
+                        na=False
+                    )
+                )
+
+                .any(axis=1)
+            )
+
+
+            filtered = filtered[
+                mask
+            ]
+
 
         st.caption(
-            f"{len(filtered):,} transactions displayed"
+            f"{len(filtered):,} "
+            "transactions displayed"
         )
+
 
         st.dataframe(
             filtered,
@@ -694,11 +1285,17 @@ elif page == "Transaction Explorer":
 elif page == "Reconciliation":
 
     st.markdown(
-        '<div class="section-title">Bank Reconciliation</div>',
+
+        '<div class="section-title">'
+        'Bank Reconciliation'
+        '</div>',
+
         unsafe_allow_html=True,
     )
 
+
     c1, c2, c3 = st.columns(3)
+
 
     c1.metric(
         "Matched Transactions",
@@ -715,19 +1312,31 @@ elif page == "Reconciliation":
         f"{reconciliation_rate:.2f}%"
     )
 
+
     st.progress(
+
         min(
-            max(reconciliation_rate / 100, 0),
+
+            max(
+                reconciliation_rate / 100,
+                0
+            ),
+
             1
         )
     )
 
-    st.markdown("### Unmatched Items")
+
+    st.markdown(
+        "### Unmatched Items"
+    )
+
 
     if unmatched_items.empty:
 
         st.success(
-            "No unmatched transactions were identified."
+            "No unmatched transactions "
+            "were identified."
         )
 
     else:
@@ -738,7 +1347,9 @@ elif page == "Reconciliation":
             hide_index=True,
         )
 
+
         st.info(
+
             "Unmatched items require follow-up against subsequent "
             "bank activity or supporting documentation. Timing "
             "differences may explain legitimate unmatched entries."
@@ -752,13 +1363,17 @@ elif page == "Reconciliation":
 elif page == "Model Evaluation":
 
     st.markdown(
+
         '<div class="section-title">'
         'Independent Ground-Truth Validation'
         '</div>',
+
         unsafe_allow_html=True,
     )
 
+
     c1, c2, c3, c4 = st.columns(4)
+
 
     c1.metric(
         "Known Anomalies",
@@ -780,20 +1395,28 @@ elif page == "Model Evaluation":
         f"{detection_rate:.1f}%"
     )
 
+
     st.markdown(
         """
 <div class="info-box">
-<b>Validation methodology:</b><br><br>
+
+<b>Validation methodology:</b>
+
+<br><br>
+
 The ground-truth dataset contains intentionally embedded
 anomalies used to evaluate LedgerLens after deterministic
 financial-control and risk-scoring processes have been
-applied. This is a synthetic benchmark and should not be
-interpreted as universal real-world anomaly-detection
-accuracy.
+applied.
+
+This is a synthetic benchmark and should not be interpreted
+as universal real-world anomaly-detection accuracy.
+
 </div>
 """,
         unsafe_allow_html=True,
     )
+
 
     if not evaluation_results.empty:
 
@@ -806,6 +1429,7 @@ accuracy.
             use_container_width=True,
             hide_index=True,
         )
+
 
     if not evaluation_summary.empty:
 
@@ -827,11 +1451,14 @@ accuracy.
 elif page == "AI Management Review":
 
     st.markdown(
+
         '<div class="section-title">'
         'Gemini-Assisted Management Review'
         '</div>',
+
         unsafe_allow_html=True,
     )
+
 
     st.markdown(
         """
@@ -847,9 +1474,14 @@ transaction as fraud or accounting error.
 """
     )
 
-    st.markdown("### Verified Analytical Context")
+
+    st.markdown(
+        "### Verified Analytical Context"
+    )
+
 
     c1, c2, c3, c4 = st.columns(4)
+
 
     c1.metric(
         "Net Income",
@@ -871,12 +1503,18 @@ transaction as fraud or accounting error.
         f"{reconciliation_rate:.2f}%"
     )
 
+
     if "ai_review" not in st.session_state:
+
         st.session_state.ai_review = ""
 
+
     if st.button(
+
         "✨ Generate AI Management Review",
+
         type="primary",
+
         use_container_width=True,
     ):
 
@@ -884,19 +1522,23 @@ transaction as fraud or accounting error.
 
             from google import genai
 
+
             api_key = st.secrets.get(
                 "GEMINI_API_KEY",
                 ""
             )
+
 
             model_name = st.secrets.get(
                 "GEMINI_MODEL",
                 "gemini-2.5-flash"
             )
 
+
             if not api_key:
 
                 st.error(
+
                     "Gemini API key has not yet been "
                     "configured in Streamlit Secrets."
                 )
@@ -907,25 +1549,40 @@ transaction as fraud or accounting error.
                     api_key=api_key
                 )
 
+
                 risk_context = ""
+
 
                 if not transaction_risk.empty:
 
                     risk_context = (
+
                         transaction_risk
+
                         .head(25)
-                        .to_string(index=False)
+
+                        .to_string(
+                            index=False
+                        )
                     )
 
+
                 unmatched_context = ""
+
 
                 if not unmatched_items.empty:
 
                     unmatched_context = (
+
                         unmatched_items
+
                         .head(10)
-                        .to_string(index=False)
+
+                        .to_string(
+                            index=False
+                        )
                     )
+
 
                 prompt = f"""
 You are assisting with a management-level financial review.
@@ -982,6 +1639,17 @@ Prepare a professional management review with these sections:
 
 Use professional financial-review language.
 
+IMPORTANT FORMATTING REQUIREMENTS:
+
+Use normal Markdown only.
+
+Do not use LaTeX or mathematical notation.
+
+Display currency amounts using ordinary dollar signs and
+commas, such as $741,774.90.
+
+Do not place currency values inside mathematical expressions.
+
 Clearly distinguish an anomaly or review flag from confirmed
 fraud, misconduct, or accounting error.
 
@@ -993,40 +1661,92 @@ providing management-oriented interpretation of those
 verified results.
 """
 
+
                 with st.spinner(
-                    "Gemini is preparing the management review..."
+
+                    "Gemini is preparing "
+                    "the management review..."
+
                 ):
 
-                    response = client.models.generate_content(
-                        model=model_name,
-                        contents=prompt,
+                    response = (
+                        client.models.generate_content(
+
+                            model=model_name,
+
+                            contents=prompt,
+                        )
                     )
 
+
                 st.session_state.ai_review = (
+
                     response.text
+
                     if response.text
+
                     else "No review was returned."
                 )
+
 
         except Exception as error:
 
             st.error(
-                f"AI review could not be generated: {error}"
+
+                "AI review could not be generated. "
+                "The analytical LedgerLens results remain available. "
+                f"API response: {error}"
             )
+
+
+    # ========================================================
+    # DISPLAY GENERATED AI REVIEW
+    # ========================================================
 
     if st.session_state.ai_review:
 
         st.markdown("---")
 
-        st.markdown(
+
+        # Streamlit Markdown interprets text between dollar
+        # signs as LaTeX. Gemini frequently writes financial
+        # sentences containing multiple dollar values.
+        #
+        # We therefore escape dollar signs ONLY in the
+        # display copy. The original generated response stays
+        # unchanged for downloads and the management report.
+
+        display_review = (
+
             st.session_state.ai_review
+
+            .replace(
+                "$",
+                r"\$"
+            )
         )
 
+
+        st.markdown(
+            display_review
+        )
+
+
         st.download_button(
+
             "⬇️ Download AI Management Review",
-            data=st.session_state.ai_review,
-            file_name="LedgerLens_AI_Management_Review.txt",
+
+            data=(
+                st.session_state.ai_review
+            ),
+
+            file_name=(
+                "LedgerLens_AI_"
+                "Management_Review.txt"
+            ),
+
             mime="text/plain",
+
             use_container_width=True,
         )
 
@@ -1038,9 +1758,14 @@ verified results.
 elif page == "Management Report":
 
     st.markdown(
-        '<div class="section-title">Management Report</div>',
+
+        '<div class="section-title">'
+        'Management Report'
+        '</div>',
+
         unsafe_allow_html=True,
     )
+
 
     st.markdown(
         """
@@ -1050,6 +1775,7 @@ validation, and AI-assisted interpretation into a
 management-ready summary.
 """
     )
+
 
     report_text = f"""
 LEDGERLENS AI
@@ -1122,18 +1848,31 @@ independently establish fraud, misconduct, or accounting
 error.
 """
 
+
     st.text_area(
+
         "Report Preview",
+
         report_text,
+
         height=500,
     )
 
+
     st.download_button(
+
         "⬇️ Download Management Report",
+
         data=report_text,
-        file_name="LedgerLens_Management_Report.txt",
+
+        file_name=(
+            "LedgerLens_Management_Report.txt"
+        ),
+
         mime="text/plain",
+
         type="primary",
+
         use_container_width=True,
     )
 
@@ -1145,11 +1884,14 @@ error.
 elif page == "System Design":
 
     st.markdown(
+
         '<div class="section-title">'
         'LedgerLens System Design'
         '</div>',
+
         unsafe_allow_html=True,
     )
+
 
     st.markdown(
         """
@@ -1208,7 +1950,9 @@ follow-up.
 """
     )
 
+
     st.success(
+
         "LedgerLens is designed as a decision-support system, "
         "not an autonomous fraud determination system."
     )
@@ -1221,10 +1965,15 @@ follow-up.
 st.markdown(
     """
 <div class="footer">
-LedgerLens AI • AI-Assisted Financial Review System<br>
+
+LedgerLens AI • AI-Assisted Financial Review System
+
+<br>
+
 Deterministic controls + risk prioritization +
 reconciliation + independent validation +
 generative AI interpretation
+
 </div>
 """,
     unsafe_allow_html=True,
