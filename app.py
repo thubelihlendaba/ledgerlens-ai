@@ -1097,36 +1097,9 @@ with st.sidebar:
 # ============================================================
 
 st.markdown(
-    """
-    <div class="main-header">
-        <div style="font-size:13px; letter-spacing:3px; font-weight:700;">
-            AI-ASSISTED FINANCIAL REVIEW
-        </div>
-
-        <h1 style="
-            margin-top:18px;
-            margin-bottom:18px;
-            color:#ffffff !important;
-            font-size:42px;
-            font-weight:700;
-        ">
-            LedgerLens AI
-        </h1>
-
-        <p style="
-            margin:0;
-            color:#ffffff !important;
-            font-size:16px;
-            font-weight:500;
-        ">
-            Financial controls • anomaly detection • reconciliation •
-            risk prioritization • AI-assisted management interpretation
-        </p>
-    </div>
-    """,
+    """<div class="main-header"><div class="header-kicker">AI-ASSISTED FINANCIAL REVIEW</div><h1>LedgerLens AI</h1><p>Financial controls • anomaly detection • reconciliation • risk prioritization • AI-assisted management interpretation</p></div>""",
     unsafe_allow_html=True,
 )
-
 
 # ============================================================
 # EXECUTIVE DASHBOARD
