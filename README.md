@@ -161,7 +161,7 @@ The model-evaluation view compares LedgerLens' identified exceptions against int
 
 LedgerLens can pass verified analytical results to Google Gemini to generate management-oriented financial and internal-control commentary. The generative AI layer interprets existing analytical findings rather than independently determining transaction classifications.
 
-![LedgerLens AI Management Review](screenshots/ai_management_review.png)
+![LedgerLens AI Management Review](assets/ai_management_review.png)
 
 ---
 
