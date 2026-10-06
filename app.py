@@ -773,8 +773,8 @@ def render_dataframe(df, height=None):
 
 def clean_ai_markdown(text):
     """
-    Cleans common formatting artifacts returned by generative models
-    without changing the substantive AI review.
+    Clean Gemini markdown formatting artifacts without changing
+    the substantive content of the generated management review.
     """
 
     if not text:
@@ -782,19 +782,93 @@ def clean_ai_markdown(text):
 
     cleaned = str(text)
 
-    # Repair cases where model markdown attaches directly to currency.
+    # ---------------------------------------------------------
+    # NORMALIZE CURRENCY
+    # ---------------------------------------------------------
+
+    # Remove accidental spaces inside dollar amounts:
+    # $5, 000.00 -> $5,000.00
+    # $4, 850.00 -> $4,850.00
     cleaned = re.sub(
-        r"\$([0-9,]+\.\d{2})\s*\*\*",
-        r"$\\1",
+        r"\$(\d{1,3}),\s+(\d{3}(?:\.\d{2})?)",
+        r"$\1,\2",
         cleaned
     )
 
+    # ---------------------------------------------------------
+    # REMOVE BROKEN MARKDOWN AROUND SENTENCES
+    # ---------------------------------------------------------
+
+    # Gemini sometimes produces:
+    # : ** *This payment...
+    # : ** *9.4 times...
+    #
+    # Remove those stray markers.
+    cleaned = re.sub(
+        r":\s*\*{2}\s*\*+\s*",
+        ": ",
+        cleaned
+    )
+
+    # Remove stray bold/italic markers immediately after punctuation.
+    cleaned = re.sub(
+        r"([:;,])\s*\*{1,3}\s+",
+        r"\1 ",
+        cleaned
+    )
+
+    # ---------------------------------------------------------
+    # PREVENT FINANCIAL VALUES FROM BECOMING ITALIC
+    # ---------------------------------------------------------
+
+    # $741,774.90, *operating expenses* of...
+    # becomes normal prose.
+    cleaned = re.sub(
+        r"\*([^*\n]+)\*",
+        r"\1",
+        cleaned
+    )
+
+    # Remove remaining paired bold markers while preserving text.
+    cleaned = re.sub(
+        r"\*\*([^*\n]+)\*\*",
+        r"\1",
+        cleaned
+    )
+
+    # ---------------------------------------------------------
+    # CLEAN COMMON GEMINI SPACING ARTIFACTS
+    # ---------------------------------------------------------
+
+    # Add spacing when markdown cleanup leaves words stuck together.
+    cleaned = re.sub(
+        r"(\d)(times)(the)",
+        r"\1 times the ",
+        cleaned,
+        flags=re.IGNORECASE
+    )
+
+    cleaned = re.sub(
+        r"(times)(the)(historical)",
+        r"times the historical",
+        cleaned,
+        flags=re.IGNORECASE
+    )
+
+    # Remove escaped dollar signs.
     cleaned = cleaned.replace("\\$", "$")
 
-    # Remove accidental duplicated bold markers around currency.
+    # Remove excessive whitespace before punctuation.
     cleaned = re.sub(
-        r"\*\*\s*(\$[0-9,]+\.\d{2})\s*\*\*",
-        r"**\\1**",
+        r"\s+([,.!?;:])",
+        r"\1",
+        cleaned
+    )
+
+    # Collapse repeated spaces without destroying line breaks.
+    cleaned = re.sub(
+        r"[ \t]{2,}",
+        " ",
         cleaned
     )
 
