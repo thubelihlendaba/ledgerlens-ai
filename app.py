@@ -770,11 +770,10 @@ def render_dataframe(df, height=None):
         height=height,
     )
 
-
 def clean_ai_markdown(text):
     """
-    Clean Gemini markdown formatting artifacts without changing
-    the substantive content of the generated management review.
+    Cleans common formatting artifacts returned by generative models
+    without changing the substantive AI review.
     """
 
     if not text:
@@ -782,93 +781,19 @@ def clean_ai_markdown(text):
 
     cleaned = str(text)
 
-    # ---------------------------------------------------------
-    # NORMALIZE CURRENCY
-    # ---------------------------------------------------------
-
-    # Remove accidental spaces inside dollar amounts:
-    # $5, 000.00 -> $5,000.00
-    # $4, 850.00 -> $4,850.00
+    # Repair cases where model markdown attaches directly to currency.
     cleaned = re.sub(
-        r"\$(\d{1,3}),\s+(\d{3}(?:\.\d{2})?)",
-        r"$\1,\2",
+        r"\$([0-9,]+\.\d{2})\s*\*\*",
+        r"$\1",
         cleaned
     )
 
-    # ---------------------------------------------------------
-    # REMOVE BROKEN MARKDOWN AROUND SENTENCES
-    # ---------------------------------------------------------
-
-    # Gemini sometimes produces:
-    # : ** *This payment...
-    # : ** *9.4 times...
-    #
-    # Remove those stray markers.
-    cleaned = re.sub(
-        r":\s*\*{2}\s*\*+\s*",
-        ": ",
-        cleaned
-    )
-
-    # Remove stray bold/italic markers immediately after punctuation.
-    cleaned = re.sub(
-        r"([:;,])\s*\*{1,3}\s+",
-        r"\1 ",
-        cleaned
-    )
-
-    # ---------------------------------------------------------
-    # PREVENT FINANCIAL VALUES FROM BECOMING ITALIC
-    # ---------------------------------------------------------
-
-    # $741,774.90, *operating expenses* of...
-    # becomes normal prose.
-    cleaned = re.sub(
-        r"\*([^*\n]+)\*",
-        r"\1",
-        cleaned
-    )
-
-    # Remove remaining paired bold markers while preserving text.
-    cleaned = re.sub(
-        r"\*\*([^*\n]+)\*\*",
-        r"\1",
-        cleaned
-    )
-
-    # ---------------------------------------------------------
-    # CLEAN COMMON GEMINI SPACING ARTIFACTS
-    # ---------------------------------------------------------
-
-    # Add spacing when markdown cleanup leaves words stuck together.
-    cleaned = re.sub(
-        r"(\d)(times)(the)",
-        r"\1 times the ",
-        cleaned,
-        flags=re.IGNORECASE
-    )
-
-    cleaned = re.sub(
-        r"(times)(the)(historical)",
-        r"times the historical",
-        cleaned,
-        flags=re.IGNORECASE
-    )
-
-    # Remove escaped dollar signs.
     cleaned = cleaned.replace("\\$", "$")
 
-    # Remove excessive whitespace before punctuation.
+    # Remove accidental duplicated bold markers around currency.
     cleaned = re.sub(
-        r"\s+([,.!?;:])",
-        r"\1",
-        cleaned
-    )
-
-    # Collapse repeated spaces without destroying line breaks.
-    cleaned = re.sub(
-        r"[ \t]{2,}",
-        " ",
+        r"\*\*\s*(\$[0-9,]+\.\d{2})\s*\*\*",
+        r"**\1**",
         cleaned
     )
 
@@ -880,6 +805,7 @@ def clean_ai_markdown(text):
     )
 
     return cleaned.strip()
+
 
 
 # ============================================================
@@ -1903,13 +1829,58 @@ STRICT RULES:
     on intentionally embedded anomalies in a synthetic dataset
     and is not evidence of universal real-world accuracy.
 
-11. Use standard Markdown carefully.
-    Do not place Markdown formatting characters inside numbers.
-    Currency must appear normally, for example:
+11. FORMATTING RULES — FOLLOW EXACTLY:
+
+    Use Markdown ONLY for the six required section headings
+    beginning with ##.
+
+    Do NOT use Markdown bold or italics anywhere in the body.
+    Do NOT use *, **, _, or __ for emphasis.
+
+    Write all body paragraphs in plain text.
+
+    When listing individual findings, use normal Markdown
+    bullet points beginning with "- " only.
+
+    Currency values must contain no spaces and must use
+    standard U.S. formatting.
+
+    CORRECT:
     $741,774.90
-    Never output malformed text such as:
-    $741,774.90**in revenue**
-    Put spaces around emphasized phrases.
+    $320,880.41
+    $5,000.00
+    $4,850.00
+    $224.90
+
+    INCORRECT:
+    $741, 774.90
+    $5, 000.00
+    $ 5,000.00
+    5,000.00
+    $741,774.90**
+    **$741,774.90**
+
+    Dates must use YYYY-MM-DD format.
+
+    Write multiplication comparisons as normal plain text.
+
+    CORRECT:
+    22.2 times the vendor's historical median of $224.90
+
+    INCORRECT:
+    22.2timesthevendor'shistoricalmedianof224.90
+    *22.2 times the vendor's historical median of $224.90*
+
+    A transaction finding should follow this format:
+
+    - Amazon Business (RND001, 2026-03-11, $5,000.00):
+      This payment is 22.2 times the vendor's historical
+      median of $224.90. The transaction requires review
+      of supporting documentation.
+
+    Never place Markdown formatting characters next to
+    transaction names, dates, numbers, percentages, or
+    currency values.
 
 12. Write in a concise, professional financial-review style
     suitable for management.
