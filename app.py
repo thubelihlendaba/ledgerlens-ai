@@ -135,6 +135,23 @@ header[data-testid="stHeader"] {
     color: #A9C0D2 !important;
 }
 
+/* Keep sidebar link buttons readable regardless of
+   Streamlit viewer theme. */
+[data-testid="stSidebar"] [data-testid="stLinkButton"] a {
+    background-color: #FFFFFF !important;
+    color: #0B2F4A !important;
+    border: 1px solid #D5DEE6 !important;
+}
+
+[data-testid="stSidebar"] [data-testid="stLinkButton"] a * {
+    color: #0B2F4A !important;
+}
+
+[data-testid="stSidebar"] [data-testid="stLinkButton"] a:hover {
+    background-color: #EAF3F8 !important;
+    color: #0B2F4A !important;
+    border-color: #54B4E6 !important;
+}
 
 /* =========================================================
    MAIN LEDGERLENS HEADER
@@ -296,6 +313,17 @@ div[data-baseweb="select"] span {
     z-index: 1000 !important;
 }
 
+/* Keep dataframe toolbar controls visible even when the
+   Streamlit viewer theme is set to Light/System. */
+[data-testid="stDataFrame"] [data-testid="stElementToolbar"] button {
+    color: #111827 !important;
+}
+
+[data-testid="stDataFrame"] [data-testid="stElementToolbar"] button svg {
+    color: #111827 !important;
+    fill: #111827 !important;
+    stroke: #111827 !important;
+}
 
 /* =========================================================
    TEXT AREA / MANAGEMENT REPORT
