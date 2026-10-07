@@ -284,7 +284,6 @@ div[data-baseweb="select"] span {
     color: #FFFFFF !important;
 }
 
-
 /* =========================================================
    DATAFRAMES
    ========================================================= */
@@ -301,21 +300,28 @@ div[data-baseweb="select"] span {
     background: #F7F9FC !important;
 }
 
-/* Keep Streamlit's native dataframe toolbar accessible.
-   This preserves fullscreen/expand and other table controls. */
+/* Preserve dataframe shape */
 [data-testid="stDataFrame"] iframe {
     border-radius: 10px !important;
 }
 
+/*
+   Keep Streamlit's native dataframe toolbar permanently
+   on a light surface so its controls remain visible regardless
+   of the viewer's Light, Dark, or System theme.
+*/
 [data-testid="stDataFrame"] [data-testid="stElementToolbar"] {
     visibility: visible !important;
     opacity: 1 !important;
     z-index: 1000 !important;
+    background-color: #F7F9FC !important;
+    border: 1px solid #D5DEE6 !important;
+    border-radius: 8px !important;
 }
 
-/* Keep dataframe toolbar controls visible even when the
-   Streamlit viewer theme is set to Light/System. */
+/* Dark toolbar controls against the permanent light surface */
 [data-testid="stDataFrame"] [data-testid="stElementToolbar"] button {
+    background-color: transparent !important;
     color: #111827 !important;
 }
 
@@ -324,6 +330,19 @@ div[data-baseweb="select"] span {
     fill: #111827 !important;
     stroke: #111827 !important;
 }
+
+/* Keep controls visible when hovering */
+[data-testid="stDataFrame"] [data-testid="stElementToolbar"] button:hover {
+    background-color: #E5EAF0 !important;
+    color: #111827 !important;
+}
+
+[data-testid="stDataFrame"] [data-testid="stElementToolbar"] button:hover svg {
+    color: #111827 !important;
+    fill: #111827 !important;
+    stroke: #111827 !important;
+}
+
 
 /* =========================================================
    TEXT AREA / MANAGEMENT REPORT
