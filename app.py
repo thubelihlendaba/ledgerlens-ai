@@ -298,130 +298,20 @@ div[data-baseweb="select"] span {
     border: 1px solid #425465 !important;
     border-radius: 10px !important;
     background: #F7F9FC !important;
-    overflow: hidden !important;
 }
 
-
-/* Preserve dataframe shape */
-[data-testid="stDataFrame"] iframe {
-    border-radius: 10px !important;
-}
-
-/* =========================================================
-   DATAFRAMES
-   ========================================================= */
-
-/*
-   Keep the dataframe itself intact.
-   Do NOT use overflow:hidden because the Streamlit toolbar
-   extends slightly outside the dataframe container.
-*/
-
-[data-testid="stDataFrame"] {
-    border: 1px solid #425465 !important;
-    border-radius: 10px !important;
-    background: #F7F9FC !important;
-}
-
-
-/* Preserve rounded dataframe shape */
+/* Keep Streamlit's native dataframe toolbar accessible.
+   This preserves fullscreen/expand and other table controls. */
 
 [data-testid="stDataFrame"] iframe {
     border-radius: 10px !important;
 }
-
-
-/* =========================================================
-   DATAFRAME TOOLBAR
-   ========================================================= */
-
-/*
-   Keep Streamlit's toolbar visible.
-
-   IMPORTANT:
-   We do NOT force SVG fill/stroke colors anymore.
-   Streamlit controls the icon color according to the
-   active Light/Dark/System theme.
-*/
 
 [data-testid="stDataFrame"] [data-testid="stElementToolbar"] {
     visibility: visible !important;
     opacity: 1 !important;
     z-index: 1000 !important;
-
-    background-color: var(--secondary-background-color) !important;
-
-    border: 1px solid var(--text-color) !important;
-    border-radius: 8px !important;
-
-    padding: 2px 4px !important;
 }
-
-
-/* Let Streamlit control the actual icon color */
-
-[data-testid="stDataFrame"]
-[data-testid="stElementToolbar"]
-button {
-    background: transparent !important;
-    border: none !important;
-    color: var(--text-color) !important;
-}
-
-
-/*
-   Use currentColor instead of hard-coding white or black.
-   This allows the icons to follow Streamlit's active theme.
-*/
-
-[data-testid="stDataFrame"]
-[data-testid="stElementToolbar"]
-button svg {
-    color: var(--text-color) !important;
-    stroke: currentColor !important;
-    opacity: 1 !important;
-}
-
-
-/* Apply the same inherited color to SVG components */
-
-[data-testid="stDataFrame"]
-[data-testid="stElementToolbar"]
-button svg path,
-[data-testid="stDataFrame"]
-[data-testid="stElementToolbar"]
-button svg line,
-[data-testid="stDataFrame"]
-[data-testid="stElementToolbar"]
-button svg polyline,
-[data-testid="stDataFrame"]
-[data-testid="stElementToolbar"]
-button svg rect,
-[data-testid="stDataFrame"]
-[data-testid="stElementToolbar"]
-button svg circle {
-    stroke: currentColor !important;
-    opacity: 1 !important;
-}
-
-
-/* Subtle hover effect */
-
-[data-testid="stDataFrame"]
-[data-testid="stElementToolbar"]
-button:hover {
-    background-color: var(--background-color) !important;
-}
-
-
-/* Keep toolbar visible */
-
-[data-testid="stDataFrame"]:hover
-[data-testid="stElementToolbar"] {
-    visibility: visible !important;
-    opacity: 1 !important;
-}
-
 /* =========================================================
    TEXT AREA / MANAGEMENT REPORT
    ========================================================= */
