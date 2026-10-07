@@ -305,42 +305,14 @@ div[data-baseweb="select"] span {
     border-radius: 10px !important;
 }
 
-/*
-   Keep Streamlit's native dataframe toolbar permanently
-   on a light surface so its controls remain visible regardless
-   of the viewer's Light, Dark, or System theme.
-*/
+/* Keep Streamlit's native dataframe toolbar accessible.
+   Let Streamlit control the toolbar icon colors so they
+   respond correctly to Light, Dark, and System themes. */
 [data-testid="stDataFrame"] [data-testid="stElementToolbar"] {
     visibility: visible !important;
     opacity: 1 !important;
     z-index: 1000 !important;
-    background-color: #F7F9FC !important;
-    border: 1px solid #D5DEE6 !important;
-    border-radius: 8px !important;
 }
-
-/* Dark toolbar controls against the permanent light surface */
-[data-testid="stDataFrame"] [data-testid="stElementToolbar"] button {
-    background-color: transparent !important;
-    color: #111827 !important;
-}
-
-[data-testid="stDataFrame"] [data-testid="stElementToolbar"] button svg {
-    color: #111827 !important;
-    fill: #111827 !important;
-    stroke: #111827 !important;
-}
-
-/* Keep controls visible when hovering */
-[data-testid="stDataFrame"] [data-testid="stElementToolbar"] button:hover {
-    background-color: #E5EAF0 !important;
-    color: #111827 !important;
-}
-
-[data-testid="stDataFrame"] [data-testid="stElementToolbar"] button:hover svg {
-    color: #111827 !important;
-    fill: #111827 !important;
-    stroke: #111827 !important;
 }
 
 
