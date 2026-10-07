@@ -312,7 +312,12 @@ div[data-baseweb="select"] span {
     visibility: visible !important;
     opacity: 1 !important;
     z-index: 1000 !important;
-}
+
+    /* Mid-tone LedgerLens blue provides contrast for both
+       Streamlit light-theme and dark-theme toolbar icons. */
+    background-color: #28688F !important;
+    border-radius: 8px !important;
+    padding: 2px 4px !important;
 }
 
 
