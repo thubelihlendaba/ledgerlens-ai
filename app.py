@@ -1107,6 +1107,16 @@ with st.sidebar:
     st.caption("Lakeview Consulting LLC")
     st.caption("January – June 2026")
 
+    st.markdown("---")
+
+    st.markdown("### Project Resources")
+
+    st.link_button(
+        "💻 View Source Code on GitHub",
+        "https://github.com/thubelihlendaba/ledgerlens-ai",
+        use_container_width=True,
+    )
+
 
 # ============================================================
 # HEADER
