@@ -307,15 +307,41 @@ div[data-baseweb="select"] span {
     border-radius: 10px !important;
 }
 
+/* =========================================================
+   DATAFRAMES
+   ========================================================= */
+
+/*
+   Keep the dataframe itself intact.
+   Do NOT use overflow:hidden because the Streamlit toolbar
+   extends slightly outside the dataframe container.
+*/
+
+[data-testid="stDataFrame"] {
+    border: 1px solid #425465 !important;
+    border-radius: 10px !important;
+    background: #F7F9FC !important;
+}
+
+
+/* Preserve rounded dataframe shape */
+
+[data-testid="stDataFrame"] iframe {
+    border-radius: 10px !important;
+}
+
 
 /* =========================================================
    DATAFRAME TOOLBAR
    ========================================================= */
 
 /*
-   Give the dataframe toolbar a fixed LedgerLens blue background.
-   Because this background does not change with Streamlit's
-   Light/Dark/System setting, the controls remain consistent.
+   Keep Streamlit's toolbar visible.
+
+   IMPORTANT:
+   We do NOT force SVG fill/stroke colors anymore.
+   Streamlit controls the icon color according to the
+   active Light/Dark/System theme.
 */
 
 [data-testid="stDataFrame"] [data-testid="stElementToolbar"] {
@@ -323,43 +349,41 @@ div[data-baseweb="select"] span {
     opacity: 1 !important;
     z-index: 1000 !important;
 
-    background-color: #28688F !important;
-    border: none !important;
+    background-color: var(--secondary-background-color) !important;
+
+    border: 1px solid var(--text-color) !important;
     border-radius: 8px !important;
+
     padding: 2px 4px !important;
-    box-shadow: none !important;
 }
 
 
-/* Keep the individual toolbar buttons transparent.
-   The blue toolbar container provides the background. */
+/* Let Streamlit control the actual icon color */
 
 [data-testid="stDataFrame"]
 [data-testid="stElementToolbar"]
 button {
-    background-color: transparent !important;
+    background: transparent !important;
     border: none !important;
-    box-shadow: none !important;
-    color: #FFFFFF !important;
+    color: var(--text-color) !important;
 }
 
 
-/* Force the visible toolbar SVG icons to white.
-   This covers the column, download, search and fullscreen icons. */
+/*
+   Use currentColor instead of hard-coding white or black.
+   This allows the icons to follow Streamlit's active theme.
+*/
 
 [data-testid="stDataFrame"]
 [data-testid="stElementToolbar"]
 button svg {
-    color: #FFFFFF !important;
-    fill: #FFFFFF !important;
-    stroke: #FFFFFF !important;
+    color: var(--text-color) !important;
+    stroke: currentColor !important;
     opacity: 1 !important;
 }
 
 
-/* Some Streamlit/Lucide icons define their color on child
-   paths, lines, rectangles or circles rather than the outer SVG.
-   Target those elements directly as well. */
+/* Apply the same inherited color to SVG components */
 
 [data-testid="stDataFrame"]
 [data-testid="stElementToolbar"]
@@ -372,73 +396,25 @@ button svg line,
 button svg polyline,
 [data-testid="stDataFrame"]
 [data-testid="stElementToolbar"]
-button svg polygon,
-[data-testid="stDataFrame"]
-[data-testid="stElementToolbar"]
 button svg rect,
 [data-testid="stDataFrame"]
 [data-testid="stElementToolbar"]
 button svg circle {
-    color: #FFFFFF !important;
-    stroke: #FFFFFF !important;
+    stroke: currentColor !important;
     opacity: 1 !important;
 }
 
 
-/* Preserve filled SVG elements where Streamlit uses them. */
-
-[data-testid="stDataFrame"]
-[data-testid="stElementToolbar"]
-button svg path[fill]:not([fill="none"]),
-[data-testid="stDataFrame"]
-[data-testid="stElementToolbar"]
-button svg rect[fill]:not([fill="none"]),
-[data-testid="stDataFrame"]
-[data-testid="stElementToolbar"]
-button svg circle[fill]:not([fill="none"]) {
-    fill: #FFFFFF !important;
-}
-
-
-/* Hover state:
-   slightly lighter blue, while keeping icons white. */
+/* Subtle hover effect */
 
 [data-testid="stDataFrame"]
 [data-testid="stElementToolbar"]
 button:hover {
-    background-color: #347FA8 !important;
-    border: none !important;
-    box-shadow: none !important;
-    color: #FFFFFF !important;
-}
-
-[data-testid="stDataFrame"]
-[data-testid="stElementToolbar"]
-button:hover svg,
-[data-testid="stDataFrame"]
-[data-testid="stElementToolbar"]
-button:hover svg * {
-    color: #FFFFFF !important;
-    stroke: #FFFFFF !important;
-    opacity: 1 !important;
+    background-color: var(--background-color) !important;
 }
 
 
-/* Remove browser/Streamlit focus outlines from the toolbar
-   without affecting the dataframe itself. */
-
-[data-testid="stDataFrame"]
-[data-testid="stElementToolbar"]
-button:focus,
-[data-testid="stDataFrame"]
-[data-testid="stElementToolbar"]
-button:focus-visible {
-    outline: none !important;
-    box-shadow: none !important;
-}
-
-
-/* Keep toolbar visible when hovering over the dataframe. */
+/* Keep toolbar visible */
 
 [data-testid="stDataFrame"]:hover
 [data-testid="stElementToolbar"] {
